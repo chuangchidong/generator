@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.generator.dao.SysGeneratorDao">
+	<select id="queryList" resultType="map">
+		select table_name tableName, engine, table_comment tableComment, create_time createTime from information_schema.tables 
+			where table_schema = (select database()) 
+		<if test="tableName != null and tableName.trim() != ''">
+			and table_name like concat('%', #{tableName}, '%') 
+		</if>
+		order by create_time desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from information_schema.tables where table_schema = (select database())
+		<if test="tableName != null and tableName.trim() != ''">
+			and table_name like concat('%', #{tableName}, '%') 
+		</if> 
+	</select> 
+	
+	<select id="queryTable" resultType="map">
+		select table_name tableName, engine, table_comment tableComment, create_time createTime from information_schema.tables 
+			where table_schema = (select database()) and table_name = #{tableName}
+	</select> 
+	
+	<select id="queryColumns" resultType="map">
+		select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra,
+			concat(upper(column_type),' ',
+case when is_nullable='NO' and column_default is null then 'NOT NULL'
+	when is_nullable='NO' and column_default is not null then concat("NOT NULL DEFAULT '",column_default,"'")
+	when is_nullable='YES' and column_default is null then 'DEFAULT NULL'
+	when is_nullable='YES' and column_default is not null then concat("DEFAULT '",column_default,"'") else '' end,
+' COMMENT'," '",column_comment,"'" ) jpaColumnDefinition,
+			left( substring(column_type,locate('(',column_type)+1),  locate(')',substring(column_type,locate('(',column_type)+1))-1 ) `length`,
+			is_nullable `nullable`
+	from information_schema.columns
+	where table_name = #{tableName} and table_schema = (select database()) order by ordinal_position
+	</select>
+</mapper>

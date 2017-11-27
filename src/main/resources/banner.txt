@@ -1,0 +1,22 @@
+${AnsiColor.RED}
+                    _ooOoo_
+${AnsiColor.BRIGHT_RED}                   o8888888o
+                   88" . "88
+${AnsiColor.YELLOW}                   (| -_- |)
+                   O\  =  /O
+${AnsiColor.BRIGHT_GREEN}                ____/`---'\____
+              .'  \\|     |//  `.
+${AnsiColor.GREEN}             /  \\|||  :  |||//  \
+            /  _||||| -:- |||||-  \
+${AnsiColor.BRIGHT_GREEN}            |   | \\\  -  /// |   |
+            | \_|  ''\---/''  |   |
+${AnsiColor.CYAN}            \  .-\__  `-`  ___/-. /
+          ___`. .'  /--.--\  `. . __
+${AnsiColor.BRIGHT_CYAN}       ."" '<  `.___\_<|>_/___.'  >'"".
+      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+${AnsiColor.BLUE}      \  \ `-.   \_ __\ /__ _/   .-` /  /
+   ======`-.____`-.___\_____/___.-`____.-'======
+${AnsiColor.BRIGHT_MAGENTA}                    `=---='
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+${AnsiColor.MAGENTA}                佛祖保佑 永无BUG
+${AnsiColor.DEFAULT}
