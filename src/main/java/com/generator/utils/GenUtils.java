@@ -32,7 +32,7 @@ public class GenUtils {
         List<String> templates = new ArrayList<String>();
         templates.add("templates/Entity.java.vm");
         templates.add("templates/Dao.java.vm");
-        templates.add("templates/Repository.java.vm");
+//        templates.add("templates/Repository.java.vm");
         templates.add("templates/Dao.xml.vm");
         templates.add("templates/Service.java.vm");
         templates.add("templates/ServiceImpl.java.vm");
