@@ -30,9 +30,9 @@ public class GenUtils {
 
     public static List<String> getTemplates(){
         List<String> templates = new ArrayList<String>();
-        templates.add("templates/Entity.java.vm");
+        templates.add("templates/jpa/Entity.java.vm");
         templates.add("templates/Dao.java.vm");
-//        templates.add("templates/Repository.java.vm");
+        templates.add("templates/jpa/Repository.java.vm");
         templates.add("templates/Dao.xml.vm");
         templates.add("templates/Service.java.vm");
         templates.add("templates/ServiceImpl.java.vm");
@@ -180,7 +180,7 @@ public class GenUtils {
         }
 
         if (template.contains("Entity.java.vm" )) {
-            return packagePath + "entity" + File.separator + className + "Entity.java";
+            return packagePath + "entity" + File.separator + className + ".java";
         }
 
         if (template.contains("Dao.java.vm" )) {
