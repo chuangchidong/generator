@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.generator.dao.ResponseDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.generator.entity.ResponseEntity" id="responseMap">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="apiId" column="api_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="field" column="field"/>
+        <result property="type" column="type"/>
+        <result property="desc" column="desc"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.generator.entity.ResponseEntity">
+		select * from t_response where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.generator.entity.ResponseEntity">
+		select * from t_response
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_response 
+	</select>
+	 
+	<insert id="save" parameterType="com.generator.entity.ResponseEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_response
+		(
+			`project_id`, 
+			`module_id`, 
+			`api_id`, 
+			`parent_id`, 
+			`field`, 
+			`type`, 
+			`desc`
+		)
+		values
+		(
+			#{projectId}, 
+			#{moduleId}, 
+			#{apiId}, 
+			#{parentId}, 
+			#{field}, 
+			#{type}, 
+			#{desc}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.generator.entity.ResponseEntity">
+		update t_response 
+		<set>
+			<if test="projectId != null">`project_id` = #{projectId}, </if>
+			<if test="moduleId != null">`module_id` = #{moduleId}, </if>
+			<if test="apiId != null">`api_id` = #{apiId}, </if>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="field != null">`field` = #{field}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="desc != null">`desc` = #{desc}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_response where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_response where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

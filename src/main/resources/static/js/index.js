@@ -30,7 +30,7 @@ var vm = new Vue({
 
 //路由
 var router = new Router();
-var menus = ["main.html","generator.html"];
+var menus = ["main.html","generator.html","api.html","module.html"];
 routerList(router, menus);
 router.start();
 
@@ -47,6 +47,7 @@ function routerList(router, menus){
 			$("a[href='"+url+"']").parents("li").addClass("active");
 
 			vm.navTitle = $("a[href='"+url+"']").text();
+			console.log("===vm.navTitle==="+vm.navTitle);
 		});
 	}
 }
