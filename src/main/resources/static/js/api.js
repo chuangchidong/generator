@@ -67,7 +67,7 @@ var vm = new Vue({
 			var url = vm.api.id == null ? "free/api/save" : "free/api/update";
 			$.ajax({
 				type: "POST",
-			    url: baseURL + url,
+			    url: url,
                 contentType: "application/json",
 			    data: JSON.stringify(vm.api),
 			    success: function(r){
@@ -90,7 +90,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "free/api/delete",
+				    url: "free/api/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -106,7 +106,7 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "free/api/info/"+id, function(r){
+			$.get("free/api/info/"+id, function(r){
                 vm.api = r.api;
             });
 		},

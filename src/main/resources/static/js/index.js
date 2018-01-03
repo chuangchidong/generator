@@ -47,7 +47,6 @@ function routerList(router, menus){
 			$("a[href='"+url+"']").parents("li").addClass("active");
 
 			vm.navTitle = $("a[href='"+url+"']").text();
-			console.log("===vm.navTitle==="+vm.navTitle);
 		});
 	}
 }

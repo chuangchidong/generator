@@ -22,4 +22,6 @@ spring:
 # Mybatis配置
 mybatis:
     mapperLocations: classpath:mapper/**/*.xml
+    configuration:
+      map-underscore-to-camel-case: true
 
