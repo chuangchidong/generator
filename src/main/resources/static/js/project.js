@@ -1,14 +1,18 @@
 $(function () {
+    var lastsel;
+
     $("#jqGrid").jqGrid({
         url: 'free/project/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '名称', name: 'name', index: 'name', width: 80 }, 			
-			{ label: '版本', name: 'version', index: 'version', width: 80 }, 			
-			{ label: '描述', name: 'desc', index: 'desc', width: 80 }, 			
-			{ label: '说明', name: 'remark', index: 'remark', width: 80 }			
-        ],
+			{ label: 'id', name: 'id', index: 'id', width: 30, key: true },
+			{ label: '名称', name: 'name', index: 'name', width: 60 },
+			{ label: '版本', name: 'version', index: 'version', width: 40 },
+			{ label: '描述', name: 'desc', index: 'desc', width: 80,editable : true },
+			{ label: '说明', name: 'remark', index: 'remark', width: 80,editable : true },
+			{ label: '操作', name : 'act', width : 100, sortable : false}
+
+		],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
@@ -29,9 +33,29 @@ $(function () {
             rows:"limit", 
             order: "order"
         },
+        //onSelectRow : function(id) {
+        //    if (id && id !== lastsel) {
+        //        jQuery('#jqGrid').jqGrid('restoreRow', lastsel);
+        //        jQuery('#jqGrid').jqGrid('editRow', id, true);
+        //        lastsel = id;
+        //    }
+        //},
+        editurl : "free/project/edit",
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			var ids = jQuery("#jqGrid").jqGrid('getDataIDs');
+			for ( var i = 0; i < ids.length; i++) {
+				var cl = ids[i];
+				be = "<input style='margin:3px;' type='button' value='编辑' onclick=\"jQuery('#jqGrid').editRow('"+ cl + "');\" />";
+				se = "<input style='margin:3px;' type='button' value='保存' onclick=\"calSaveRow(jQuery('#jqGrid'),'"+ cl + "');\" />";
+				ce = "<input style='margin:3px;' type='button' value='取消' onclick=\"jQuery('#jqGrid').restoreRow('"+ cl + "');\" />";
+				//de = "<input style='margin:3px;' type='button' value='删除' onclick=\"jQuery('#jqGrid').delGridRow('"+ cl + "');\" />";
+				jQuery("#jqGrid").jqGrid('setRowData', ids[i],
+					{
+						act : be + se + ce
+					});
+			}
         }
     });
 });
@@ -66,7 +90,7 @@ var vm = new Vue({
 			var url = vm.project.id == null ? "free/project/save" : "free/project/update";
 			$.ajax({
 				type: "POST",
-			    url: baseURL + url,
+			    url:  url,
                 contentType: "application/json",
 			    data: JSON.stringify(vm.project),
 			    success: function(r){
@@ -89,7 +113,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "free/project/delete",
+				    url:  "free/project/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -105,7 +129,7 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "free/project/info/"+id, function(r){
+			$.get( "free/project/info/"+id, function(r){
                 vm.project = r.project;
             });
 		},

@@ -1,15 +1,13 @@
 package com.generator.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.generator.entity.ProjectEntity;
 import com.generator.service.ProjectService;
@@ -17,7 +15,7 @@ import com.generator.utils.PageUtils;
 import com.generator.utils.Query;
 import com.generator.utils.R;
 
-
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -83,7 +81,16 @@ public class ProjectController {
 		
 		return R.ok();
 	}
-	
+	/**
+	 * 编辑,在列表中进行行编辑; jqGrid是form提交
+	 */
+	@RequestMapping(value = "/edit")
+	@RequiresPermissions("free:project:update")
+	public R edit(@ModelAttribute ProjectEntity project ){
+		projectService.update(project);
+
+		return R.ok();
+	}
 	/**
 	 * 删除
 	 */
@@ -94,5 +101,18 @@ public class ProjectController {
 		
 		return R.ok();
 	}
-	
+
+	private String getRequestPayload(HttpServletRequest req) {
+		StringBuilder sb = new StringBuilder();
+		try(BufferedReader reader = req.getReader()) {
+			char[]buff = new char[1024];
+			int len;
+			while((len = reader.read(buff)) != -1) {
+				sb.append(buff,0, len);
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
 }
