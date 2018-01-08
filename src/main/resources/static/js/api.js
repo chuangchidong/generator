@@ -11,7 +11,6 @@ $(function () {
 			{ label: '访问方式', name: 'method', index: 'method', width: 80 }			
         ],
 		viewrecords: true,
-        height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
@@ -30,11 +29,96 @@ $(function () {
             rows:"limit", 
             order: "order"
         },
+		caption: "接口",
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			jQuery("#jqGrid").jqGrid('gridResize',{minHeight:80, maxHeight:385});
+
+		}
     });
+
+
+	$("#jqGridRequest").jqGrid({
+		url: 'free/request/list',
+		datatype: "json",
+		colModel: [
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: '项目ID', name: 'projectId', index: 'project_id', width: 80 },
+			{ label: '项目模块ID', name: 'moduleId', index: 'module_id', width: 80 },
+			{ label: 'API接口ID', name: 'apiId', index: 'api_id', width: 80 },
+			{ label: '上一级字段ID', name: 'parentId', index: 'parent_id', width: 80 },
+			{ label: '字段', name: 'field', index: 'field', width: 80 },
+			{ label: '类型', name: 'type', index: 'type', width: 80 },
+			{ label: '是否能为空', name: 'isNullable', index: 'is_nullable', width: 80 },
+			{ label: '描述', name: 'desc', index: 'desc', width: 80 }
+		],
+		viewrecords: true,
+		height: 385,
+		rowNum: 10,
+		rowList : [10,30,50],
+		rownumbers: true,
+		rownumWidth: 25,
+		autowidth:true,
+		multiselect: true,
+		jsonReader : {
+			root: "page.list",
+			page: "page.currPage",
+			total: "page.totalPage",
+			records: "page.totalCount"
+		},
+		prmNames : {
+			page:"page",
+			rows:"limit",
+			order: "order"
+		},
+		caption: "请求参数",
+		gridComplete:function(){
+			//隐藏grid底部滚动条
+			$("#jqGridRequest").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+		}
+	});
+
+
+	$("#jqGridResponse").jqGrid({
+		url: 'free/response/list',
+		datatype: "json",
+		colModel: [
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: '项目ID', name: 'projectId', index: 'project_id', width: 80 },
+			{ label: '项目模块ID', name: 'moduleId', index: 'module_id', width: 80 },
+			{ label: 'API接口ID', name: 'apiId', index: 'api_id', width: 80 },
+			{ label: '上一级字段ID', name: 'parentId', index: 'parent_id', width: 80 },
+			{ label: '字段', name: 'field', index: 'field', width: 80 },
+			{ label: '类型', name: 'type', index: 'type', width: 80 },
+			{ label: '描述', name: 'desc', index: 'desc', width: 80 }
+		],
+		viewrecords: true,
+		height: 385,
+		rowNum: 10,
+		rowList : [10,30,50],
+		rownumbers: true,
+		rownumWidth: 25,
+		autowidth:true,
+		multiselect: true,
+		jsonReader : {
+			root: "page.list",
+			page: "page.currPage",
+			total: "page.totalPage",
+			records: "page.totalCount"
+		},
+		prmNames : {
+			page:"page",
+			rows:"limit",
+			order: "order"
+		},
+		caption: "返回结果",
+		gridComplete:function(){
+			//隐藏grid底部滚动条
+			$("#jqGridResponse").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+		}
+	});
+
 });
 
 var vm = new Vue({
