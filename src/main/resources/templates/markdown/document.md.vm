@@ -1,0 +1,11 @@
+tags:${projectName}--接口文档
+---
+## 目录
+> ### 
+
+#foreach ($module in $moduleList)
+* [${module.id}  ${module.moduleName}]
+  #foreach ($api in $module.apiList)
+	[${module.id}.${api.id}  ${api.apiName}]
+  #end
+#end
