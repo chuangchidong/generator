@@ -1,12 +1,23 @@
 package com.generator.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.generator.dao.ApiDao;
+import com.generator.dao.RequestDao;
+import com.generator.dao.ResponseDao;
 import com.generator.dao.SysGeneratorDao;
+import com.generator.entity.ApiEntity;
+import com.generator.entity.RequestEntity;
+import com.generator.entity.ResponseEntity;
+import com.generator.utils.ApiGenUtils;
 import com.generator.utils.GenUtils;
+import com.generator.utils.JsonFormatTool;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
@@ -22,6 +33,13 @@ import java.util.zip.ZipOutputStream;
 public class SysGeneratorService {
 	@Autowired
 	private SysGeneratorDao sysGeneratorDao;
+
+	@Autowired
+	private ApiDao apiDao;
+	@Autowired
+	private RequestDao requestDao;
+	@Autowired
+	private ResponseDao responseDao;
 
 	public List<Map<String, Object>> queryList(Map<String, Object> map) {
 		return sysGeneratorDao.queryList(map);
@@ -54,4 +72,48 @@ public class SysGeneratorService {
 		IOUtils.closeQuietly(zip);
 		return outputStream.toByteArray();
 	}
+
+	public byte[] apiGeneratorCode(List<Integer> apiIds) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ZipOutputStream zip = new ZipOutputStream(outputStream);
+		List<ApiEntity> apiList = new ArrayList<>();
+		for (Integer apiId : apiIds) {
+
+			ApiEntity apiEntity = apiDao.queryObject(apiId);
+
+			Map<String,Object> param = new HashMap<>();
+			param.put("api_id",apiId);
+
+			List<RequestEntity> requestList = requestDao.queryList(param);
+			apiEntity.setRequestList(requestList);
+
+			List<ResponseEntity> responseList = responseDao.queryList(param);
+			apiEntity.setResponseList(responseList);
+			apiEntity.setResponseJson(this.responseJson(responseList));
+			apiList.add(apiEntity);
+		}
+		ApiGenUtils.generatorCode("测试文档", null, apiList, zip);
+		IOUtils.closeQuietly(zip);
+		return outputStream.toByteArray();
+	}
+
+
+	public String responseJson(List<ResponseEntity> responseList) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String field;
+		Object type;
+		for (ResponseEntity entity : responseList) {
+			field = entity.getField();
+			type = "String".equalsIgnoreCase(entity.getType()) ? entity.getDesc() : 0;
+			resultMap.put(field, type);
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("code", 0);
+		map.put("message", "SUCCESS");
+		map.put("extra", resultMap);
+		String json = JSONObject.toJSONString(map);
+		return JsonFormatTool.formatJson(json);
+	}
+
 }

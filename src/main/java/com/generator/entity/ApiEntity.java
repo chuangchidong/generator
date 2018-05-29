@@ -1,6 +1,7 @@
 package com.generator.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 模块信息
@@ -24,6 +25,13 @@ public class ApiEntity implements Serializable {
 	private String url;
 	//访问方式
 	private String method;
+
+	// 请求参数
+	private List<RequestEntity> requestList;
+	// 返回参数
+	private List<ResponseEntity> responseList;
+
+	private String responseJson;
 
 	/**
 	 * 设置：主键ID
@@ -96,5 +104,29 @@ public class ApiEntity implements Serializable {
 	 */
 	public String getMethod() {
 		return method;
+	}
+
+	public List<RequestEntity> getRequestList() {
+		return requestList;
+	}
+
+	public void setRequestList(List<RequestEntity> requestList) {
+		this.requestList = requestList;
+	}
+
+	public List<ResponseEntity> getResponseList() {
+		return responseList;
+	}
+
+	public void setResponseList(List<ResponseEntity> responseList) {
+		this.responseList = responseList;
+	}
+
+	public String getResponseJson() {
+		return responseJson;
+	}
+
+	public void setResponseJson(String responseJson) {
+		this.responseJson = responseJson;
 	}
 }

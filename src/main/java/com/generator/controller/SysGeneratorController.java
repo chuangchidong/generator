@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +65,23 @@ public class SysGeneratorController {
         response.setContentType("application/octet-stream; charset=UTF-8");  
   
         IOUtils.write(data, response.getOutputStream());  
+	}
+
+	@RequestMapping("/gen/api")
+	public void apiGen(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+
+		List<Integer> apiIdList = new ArrayList<>();
+		apiIdList.add(1);
+		apiIdList.add(2);
+
+		byte[] data = sysGeneratorService.apiGeneratorCode(apiIdList);
+
+		response.reset();
+		response.setHeader("Content-Disposition", "attachment; filename=\"generator.zip\"");
+		response.addHeader("Content-Length", "" + data.length);
+		response.setContentType("application/octet-stream; charset=UTF-8");
+
+		IOUtils.write(data, response.getOutputStream());
 	}
 }
