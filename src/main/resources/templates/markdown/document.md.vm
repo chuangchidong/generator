@@ -1,18 +1,19 @@
 tags:${projectName}--接口文档
 ---
-${hashSymbol2} 目录
-> ${hashSymbol3}
 
-#foreach ($module in $moduleList)
-* [${module.id}  ${module.moduleName}]
-  #foreach ($api in $module.apiList)
-	[${module.id}.${api.id}  ${api.apiName}]
-  #end
-#end
-* [测试目录] ${interval}
+* [目录] ${interval}
   #foreach ($api in $apiList)
 	[$api.name] (${hashSymbol1}${api.moduleId}_${api.id}) ${interval}
   #end
+
+<font color=red>
+说明：
+1.所有涉及`金额`的字段类型均用Long,精确到分
+2.所有涉及`时间`的字段类型军用Long,精确到毫秒
+3.管理后台、店铺管理后台、pos端统一传`userId`一个字段
+4.分页接口统一加上 page（页码），size（每页条数）参数
+5.需要分隔符的字段统一英文逗号分隔
+</font>
 
 #foreach ($api in $apiList)
 ${hashSymbol3} <font id=${api.moduleId}_${api.id}>${api.id}.${api.name}</font>
