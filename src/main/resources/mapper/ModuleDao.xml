@@ -15,7 +15,14 @@
 	</select>
 
 	<select id="queryList" resultType="com.generator.entity.ModuleEntity">
-		select * from t_module
+		select * from t_module WHERE 1=1
+
+		<if test="moCodeList != null and moCodeList.size>0">
+			AND projectId IN
+			<foreach item="id" collection="projectIdList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
