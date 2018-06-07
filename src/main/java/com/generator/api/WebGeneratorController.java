@@ -7,7 +7,9 @@ import com.generator.utils.PageUtils;
 import com.generator.utils.Query;
 import com.generator.utils.R;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,8 +100,26 @@ public class WebGeneratorController {
      */
     @RequestMapping("/web/module/list")
     public R moduleList(@RequestParam Map<String, Object> params){
+        String projectIdList = params.get("projectIdList") == null ? null : params.get("projectIdList").toString();
+        if (StringUtils.isNotBlank(projectIdList)) {
+            String[] arr = projectIdList.split(",");
+            List<Integer> idList = new ArrayList<>();
+            for (String i : arr) {
+                if (StringUtils.isNotBlank(i)) {
+                    idList.add(Integer.parseInt(i));
+                }
+            }
+            params.put("projectIdList", idList);
+        } else {
+            PageUtils pageUtil = new PageUtils(new ArrayList<>(), 0, 0, 0);
+            return R.ok().put("data", pageUtil);
+        }
         //查询列表数据
         Query query = new Query(params);
+
+
+
+
 
         List<ModuleEntity> moduleList = moduleService.queryList(query);
         int total = moduleService.queryTotal(query);
@@ -117,6 +138,21 @@ public class WebGeneratorController {
      */
     @RequestMapping("/web/api/list")
     public R apiList(@RequestParam Map<String, Object> params){
+        String projectIdList = params.get("moduleIdList") == null ? null : params.get("moduleIdList").toString();
+        if (StringUtils.isNotBlank(projectIdList)) {
+            String[] arr = projectIdList.split(",");
+            List<Integer> idList = new ArrayList<>();
+            for (String i : arr) {
+                if (StringUtils.isNotBlank(i)) {
+                    idList.add(Integer.parseInt(i));
+                }
+            }
+            params.put("moduleIdList", idList);
+        } else {
+            PageUtils pageUtil = new PageUtils(new ArrayList<>(), 0, 0, 0);
+            return R.ok().put("data", pageUtil);
+        }
+
         //查询列表数据
         Query query = new Query(params);
 
@@ -136,6 +172,22 @@ public class WebGeneratorController {
      */
     @RequestMapping("/web/request/list")
     public R requestList(@RequestParam Map<String, Object> params){
+        String projectIdList = params.get("apiIdList") == null ? null : params.get("apiIdList").toString();
+        if (StringUtils.isNotBlank(projectIdList)) {
+            String[] arr = projectIdList.split(",");
+            List<Integer> idList = new ArrayList<>();
+            for (String i : arr) {
+                if (StringUtils.isNotBlank(i)) {
+                    idList.add(Integer.parseInt(i));
+                }
+            }
+            params.put("apiIdList", idList);
+        } else {
+            PageUtils pageUtil = new PageUtils(new ArrayList<>(), 0, 0, 0);
+            return R.ok().put("data", pageUtil);
+        }
+
+
         //查询列表数据
         Query query = new Query(params);
 
@@ -155,6 +207,21 @@ public class WebGeneratorController {
      */
     @RequestMapping("/web/response/list")
     public R responseList(@RequestParam Map<String, Object> params){
+        String apiIdList = params.get("apiIdList") == null ? null : params.get("apiIdList").toString();
+        if (StringUtils.isNotBlank(apiIdList)) {
+            String[] arr = apiIdList.split(",");
+            List<Integer> idList = new ArrayList<>();
+            for (String i : arr) {
+                if (StringUtils.isNotBlank(i)) {
+                    idList.add(Integer.parseInt(i));
+                }
+            }
+            params.put("apiIdList", idList);
+        } else {
+            PageUtils pageUtil = new PageUtils(new ArrayList<>(), 0, 0, 0);
+            return R.ok().put("data", pageUtil);
+        }
+
         //查询列表数据
         Query query = new Query(params);
 
@@ -166,5 +233,34 @@ public class WebGeneratorController {
         return R.ok().put("data", pageUtil);
     }
 
+
+    @RequestMapping("/web/gen/api")
+    public void apiGen(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params) throws IOException{
+
+        String apiIdList = params.get("apiIdList") == null ? null : params.get("apiIdList").toString();
+        List<Integer> idList;
+        if (StringUtils.isNotBlank(apiIdList)) {
+            String[] arr = apiIdList.split(",");
+            idList = new ArrayList<>();
+            for (String i : arr) {
+                if (StringUtils.isNotBlank(i)) {
+                    idList.add(Integer.parseInt(i));
+                }
+            }
+            params.put("apiIdList", idList);
+        } else {
+            return ;
+        }
+
+
+        byte[] data = sysGeneratorService.apiGeneratorCode(idList);
+
+        response.reset();
+        response.setHeader("Content-Disposition", "attachment; filename=\"generator.zip\"");
+        response.addHeader("Content-Length", "" + data.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+
+        IOUtils.write(data, response.getOutputStream());
+    }
 
 }

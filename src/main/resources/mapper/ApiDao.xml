@@ -18,7 +18,13 @@
 	</select>
 
 	<select id="queryList" resultType="com.generator.entity.ApiEntity">
-		select * from t_api
+		select * from t_api WHERE 1=1
+		<if test="moduleIdList != null ">
+			AND module_id IN
+			<foreach item="id" collection="moduleIdList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
