@@ -27,12 +27,15 @@
 				#{id}
 			</foreach>
 		</if>
+		<if test="api_id != null ">
+			AND api_id = #{api_id}
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
 			<otherwise>
-                order by id desc
+                order by id ASC
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">

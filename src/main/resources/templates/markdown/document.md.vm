@@ -24,8 +24,7 @@ ${hashSymbol6} 请求参数
 field|类型|desc|必填
 :---:|:---:|:---:|:---:|
 #foreach($request in $api.requestList)
-$request.field|$request.type|$request.desc|#if($request.isNullable==1) Y #elseif($request.isNullable==0) N
-  #end
+$request.field|$request.type|$request.desc|#if($request.isNullable==1) Y #elseif($request.isNullable==0) N #end |
 #end
 
 

@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -99,7 +96,7 @@ public class SysGeneratorService {
 
 
 	public String responseJson(List<ResponseEntity> responseList) {
-		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> resultMap = new LinkedHashMap<>();
 		String field;
 		Object type;
 		for (ResponseEntity entity : responseList) {
