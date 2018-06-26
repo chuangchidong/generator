@@ -1,6 +1,8 @@
 package com.generator.utils;
 
+import com.generator.entity.ApiEntity;
 import com.generator.entity.ColumnEntity;
+import com.generator.entity.ModuleEntity;
 import com.generator.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -40,6 +42,8 @@ public class GenUtils {
         templates.add("templates/list.html.vm");
         templates.add("templates/list.js.vm");
         templates.add("templates/menu.sql.vm");
+        templates.add("templates/markdown/document.md.vm");
+
         return templates;
     }
 
@@ -130,8 +134,12 @@ public class GenUtils {
             tpl.merge(context, sw);
 
             try {
+                String fileName = getFileName(template, tableEntity.getClassName(), config.getString("package" ), config.getString("moduleName" ));
+                if (StringUtils.isBlank(fileName)) {
+                    continue;
+                }
                 //添加到zip
-                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("package" ), config.getString("moduleName" ))));
+                zip.putNextEntry(new ZipEntry(fileName));
                 IOUtils.write(sw.toString(), zip, "UTF-8" );
                 IOUtils.closeQuietly(sw);
                 zip.closeEntry();
@@ -219,6 +227,50 @@ public class GenUtils {
 
         if (template.contains("menu.sql.vm" )) {
             return className.toLowerCase() + "_menu.sql";
+        }
+
+        return null;
+    }
+
+
+    public static void generatorDoc(String projectName, List<ModuleEntity> moduleList, List<ApiEntity> apiList, ZipOutputStream zip) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("hashSymbol1", "#");
+        map.put("hashSymbol2", "##");
+        map.put("hashSymbol3", "###");
+        map.put("hashSymbol6", "######");
+        map.put("interval", "  ");
+
+        map.put("projectName",projectName);
+        map.put("apiList",apiList);
+
+        VelocityContext context = new VelocityContext(map);
+        //获取模板列表
+        List<String> templates = getTemplates();
+        for (String template : templates) {
+            //渲染模板
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, "UTF-8" );
+            tpl.merge(context, sw);
+
+            try {
+                //添加到zip
+                zip.putNextEntry(new ZipEntry(getDocFileName(template, projectName, "1.0")));
+                IOUtils.write(sw.toString(), zip, "UTF-8" );
+                IOUtils.closeQuietly(sw);
+                zip.closeEntry();
+            } catch (IOException e) {
+                throw new RRException("渲染文档模板失败：" , e);
+            }
+        }
+    }
+
+    public static String getDocFileName(String template, String projectName, String version){
+        String packagePath = "ZDocument";
+
+        if (template.contains("templates/markdown/document.md.vm" )) {
+            return packagePath + File.separator + projectName + "_"+version+".md";
         }
 
         return null;

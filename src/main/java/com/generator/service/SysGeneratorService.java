@@ -8,7 +8,6 @@ import com.generator.dao.SysGeneratorDao;
 import com.generator.entity.ApiEntity;
 import com.generator.entity.RequestEntity;
 import com.generator.entity.ResponseEntity;
-import com.generator.utils.ApiGenUtils;
 import com.generator.utils.GenUtils;
 import com.generator.utils.JsonFormatTool;
 import org.apache.commons.io.IOUtils;
@@ -89,7 +88,7 @@ public class SysGeneratorService {
 			apiEntity.setResponseJson(this.responseJson(responseList));
 			apiList.add(apiEntity);
 		}
-		ApiGenUtils.generatorCode("测试文档", null, apiList, zip);
+		GenUtils.generatorDoc("测试文档", null, apiList, zip);
 		IOUtils.closeQuietly(zip);
 		return outputStream.toByteArray();
 	}
