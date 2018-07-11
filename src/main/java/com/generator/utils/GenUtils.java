@@ -1,9 +1,7 @@
 package com.generator.utils;
 
-import com.generator.entity.ApiEntity;
-import com.generator.entity.ColumnEntity;
-import com.generator.entity.ModuleEntity;
-import com.generator.entity.TableEntity;
+import com.alibaba.fastjson.JSONObject;
+import com.generator.entity.*;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -274,5 +272,23 @@ public class GenUtils {
         }
 
         return null;
+    }
+
+    public static String responseJson(List<ResponseEntity> responseList) {
+        Map<String, Object> resultMap = new LinkedHashMap<>();
+        String field;
+        Object type;
+        for (ResponseEntity entity : responseList) {
+            field = entity.getField();
+            type = "String".equalsIgnoreCase(entity.getType()) ? entity.getDesc() : 0;
+            resultMap.put(field, type);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "SUCCESS");
+        map.put("extra", resultMap);
+        String json = JSONObject.toJSONString(map);
+        return JsonFormatTool.formatJson(json);
     }
 }

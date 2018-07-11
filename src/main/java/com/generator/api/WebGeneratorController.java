@@ -3,13 +3,14 @@ package com.generator.api;
 import com.alibaba.fastjson.JSON;
 import com.generator.entity.*;
 import com.generator.service.*;
+import com.generator.utils.GenUtils;
 import com.generator.utils.PageUtils;
 import com.generator.utils.Query;
 import com.generator.utils.R;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -263,4 +265,61 @@ public class WebGeneratorController {
         IOUtils.write(data, response.getOutputStream());
     }
 
+
+    /**
+     * 接口树信息
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping("/web/api/tree")
+    public R apiTree(@RequestParam Map<String, Object> params) {
+        Query query = new Query(params);
+
+        List<ProjectEntity> projectList = projectService.queryList(query);
+
+        List<Map<String,Object>> result = new ArrayList<>();
+
+        if (CollectionUtils.isNotEmpty(projectList)) {
+            for (ProjectEntity project : projectList) {
+                Map<String,Object> projectResult = new HashMap<>();
+
+                projectResult.put("project",project);
+                List<Map<String,Object>> moduleList = new ArrayList<>();
+                query.put("project_id",project.getId());
+                List<ModuleEntity> moduleEntityList = moduleService.queryList(query);
+                if (CollectionUtils.isNotEmpty(moduleEntityList)) {
+                    for (ModuleEntity module : moduleEntityList) {
+
+                        Map<String,Object> moduleResult = new HashMap<>();
+                        moduleResult.put("module",module);
+
+                        query.put("module_id",module.getId());
+                        List<ApiEntity> apiEntityList = apiService.queryList(query);
+                        if (CollectionUtils.isNotEmpty(apiEntityList)){
+
+                            for (ApiEntity apiEntity : apiEntityList) {
+                                query.put("api_id",apiEntity.getId());
+                                List<RequestEntity> requestEntityList = requestService.queryList(query);
+                                apiEntity.setRequestList(requestEntityList);
+                                List<ResponseEntity> responseEntityList = responseService.queryList(query);
+                                apiEntity.setResponseList(responseEntityList);
+                                if (CollectionUtils.isNotEmpty(responseEntityList)){
+                                    apiEntity.setResponseJson(GenUtils.responseJson(responseEntityList));
+                                }
+                            }
+
+                            moduleResult.put("apiList",apiEntityList);
+                        }
+
+                        moduleList.add(moduleResult);
+                    }
+                }
+                projectResult.put("moduleList",moduleList);
+                result.add(projectResult);
+            }
+        }
+
+        return R.ok().put("data", result);
+    }
 }

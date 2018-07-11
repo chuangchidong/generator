@@ -1,6 +1,5 @@
 package com.generator.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.generator.dao.ApiDao;
 import com.generator.dao.RequestDao;
 import com.generator.dao.ResponseDao;
@@ -9,7 +8,6 @@ import com.generator.entity.ApiEntity;
 import com.generator.entity.RequestEntity;
 import com.generator.entity.ResponseEntity;
 import com.generator.utils.GenUtils;
-import com.generator.utils.JsonFormatTool;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,7 +83,7 @@ public class SysGeneratorService {
 
 			List<ResponseEntity> responseList = responseDao.queryList(param);
 			apiEntity.setResponseList(responseList);
-			apiEntity.setResponseJson(this.responseJson(responseList));
+			apiEntity.setResponseJson(GenUtils.responseJson(responseList));
 			apiList.add(apiEntity);
 		}
 		GenUtils.generatorDoc("测试文档", null, apiList, zip);
@@ -94,22 +92,6 @@ public class SysGeneratorService {
 	}
 
 
-	public String responseJson(List<ResponseEntity> responseList) {
-		Map<String, Object> resultMap = new LinkedHashMap<>();
-		String field;
-		Object type;
-		for (ResponseEntity entity : responseList) {
-			field = entity.getField();
-			type = "String".equalsIgnoreCase(entity.getType()) ? entity.getDesc() : 0;
-			resultMap.put(field, type);
-		}
 
-		Map<String, Object> map = new HashMap<>();
-		map.put("code", 0);
-		map.put("message", "SUCCESS");
-		map.put("extra", resultMap);
-		String json = JSONObject.toJSONString(map);
-		return JsonFormatTool.formatJson(json);
-	}
 
 }
