@@ -242,6 +242,10 @@ public class GenUtils {
 
         map.put("projectName",projectName);
         map.put("apiList",apiList);
+        //设置velocity资源加载器
+        Properties prop = new Properties();
+        prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+        Velocity.init(prop);
 
         VelocityContext context = new VelocityContext(map);
         //获取模板列表
@@ -253,8 +257,12 @@ public class GenUtils {
             tpl.merge(context, sw);
 
             try {
+                String fileName = getDocFileName(template, projectName, "1.0");
+                if (StringUtils.isBlank(fileName)) {
+                    continue;
+                }
                 //添加到zip
-                zip.putNextEntry(new ZipEntry(getDocFileName(template, projectName, "1.0")));
+                zip.putNextEntry(new ZipEntry(fileName));
                 IOUtils.write(sw.toString(), zip, "UTF-8" );
                 IOUtils.closeQuietly(sw);
                 zip.closeEntry();

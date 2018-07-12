@@ -23,6 +23,9 @@
 				#{id}
 			</foreach>
 		</if>
+		<if test="project_id != null ">
+			AND project_id = #{project_id}
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
