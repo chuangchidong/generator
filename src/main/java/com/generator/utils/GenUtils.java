@@ -32,7 +32,9 @@ public class GenUtils {
         List<String> templates = new ArrayList<String>();
         templates.add("templates/Entity.java.vm");
         templates.add("templates/Dao.java.vm");
-//        templates.add("templates/Repository.java.vm");
+        /**
+         * 根据情况使用 templates.add("templates/Repository.java.vm");
+         */
         templates.add("templates/Dao.xml.vm");
         templates.add("templates/Service.java.vm");
         templates.add("templates/ServiceImpl.java.vm");
@@ -82,7 +84,7 @@ public class GenUtils {
             //列的数据类型，转换成Java类型
             String attrType = config.getString(columnEntity.getDataType(), "unknowType" );
             columnEntity.setAttrType(attrType);
-            if (!hasBigDecimal && attrType.equals("BigDecimal" )) {
+            if (!hasBigDecimal && "BigDecimal".equals(attrType)) {
                 hasBigDecimal = true;
             }
             //是否主键
@@ -106,7 +108,7 @@ public class GenUtils {
         String mainPath = config.getString("mainPath" );
         mainPath = StringUtils.isBlank(mainPath) ? "com.generator" : mainPath;
         //封装模板数据
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(1 << 4);
         map.put("tableName", tableEntity.getTableName());
         map.put("comments", tableEntity.getComments());
         map.put("pk", tableEntity.getPk());
@@ -233,7 +235,7 @@ public class GenUtils {
 
     public static void generatorDoc(String projectName, List<ModuleEntity> moduleList, List<ApiEntity> apiList, ZipOutputStream zip) {
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(1 << 4);
         map.put("hashSymbol1", "#");
         map.put("hashSymbol2", "##");
         map.put("hashSymbol3", "###");
