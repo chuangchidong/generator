@@ -12,10 +12,14 @@ import java.util.List;
  */
 public class ApiEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	//主键ID
+
+	/**
+	 * 主键ID
+	 */
 	private Integer id;
-	//项目ID
+	/**
+	 * 项目ID
+	 */
 	private Integer projectId;
 	//项目模块ID
 	private Integer moduleId;

@@ -28,7 +28,10 @@ public class ResponseEntity implements Serializable {
 	private String type;
 	//描述
 	private String desc;
-
+	/**
+	 * mock值
+	 */
+	private String mock;
 	/**
 	 * 设置：主键ID
 	 */
@@ -124,5 +127,13 @@ public class ResponseEntity implements Serializable {
 	 */
 	public String getDesc() {
 		return desc;
+	}
+
+	public String getMock() {
+		return mock;
+	}
+
+	public void setMock(String mock) {
+		this.mock = mock;
 	}
 }

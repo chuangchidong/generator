@@ -10,6 +10,9 @@ import com.generator.dao.ApiDao;
 import com.generator.entity.ApiEntity;
 import com.generator.service.ApiService;
 
+/**
+ * @author zhangzhidong
+ */
 @Service("apiService")
 public class ApiServiceImpl implements ApiService {
 	@Autowired
