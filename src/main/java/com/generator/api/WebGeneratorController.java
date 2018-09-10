@@ -2,6 +2,7 @@ package com.generator.api;
 
 import com.alibaba.fastjson.JSON;
 import com.generator.entity.*;
+import com.generator.form.WebApiSaveForm;
 import com.generator.service.*;
 import com.generator.utils.GenUtils;
 import com.generator.utils.PageUtils;
@@ -11,10 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +34,9 @@ public class WebGeneratorController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private WebApiService webApiService;
 
     /**
      * 列表
@@ -321,5 +322,11 @@ public class WebGeneratorController {
         }
 
         return R.ok().put("data", result);
+    }
+
+    @RequestMapping("/web/api/save")
+    public R apiSave(@RequestBody WebApiSaveForm form) {
+        return R.ok().put("data", webApiService.apiSave(form));
+//        return R.ok();
     }
 }
