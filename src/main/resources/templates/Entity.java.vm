@@ -18,8 +18,8 @@ public class ${className}Entity implements Serializable {
 	
 #foreach ($column in $columns)
 	/**
-	* $column.comments
- 	* /
+	 * $column.comments
+     */
 	private $column.attrType $column.attrname;
 #end
 
