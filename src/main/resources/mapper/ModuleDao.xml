@@ -38,6 +38,16 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="queryListByApiIds" resultType="com.generator.entity.ModuleEntity">
+		SELECT m.* FROM t_module m,t_api a WHERE m.id=a.module_id
+		<if test="apiList != null">
+			AND m.id IN
+			<foreach item="id" collection="apiList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from t_module

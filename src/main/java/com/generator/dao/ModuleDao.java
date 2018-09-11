@@ -3,6 +3,8 @@ package com.generator.dao;
 import com.generator.entity.ModuleEntity;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 模块信息
  * 
@@ -12,5 +14,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ModuleDao extends BaseDao<ModuleEntity> {
-	
+
+    /**
+     * 根据接口Id获取模板信息
+     * @param apiIds 接口ID集合
+     * @return
+     */
+	List<ModuleEntity> queryListByApiIds(List<Integer> apiIds);
 }
