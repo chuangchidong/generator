@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="projectId" column="project_id"/>
         <result property="name" column="name"/>
+        <result property="code" column="code"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.generator.entity.ModuleEntity">
@@ -39,14 +40,13 @@
 		</if>
 	</select>
 
-	<select id="queryListByApiIds" resultType="com.generator.entity.ModuleEntity">
+	<select id="queryListByApiIds" resultType="com.generator.entity.ModuleEntity" parameterType="java.util.List">
 		SELECT m.* FROM t_module m,t_api a WHERE m.id=a.module_id
-		<if test="apiList != null">
-			AND m.id IN
-			<foreach item="id" collection="apiList" open="(" separator="," close=")">
-				#{id}
-			</foreach>
-		</if>
+		AND m.id IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		GROUP BY m.id
 	</select>
 	
  	<select id="queryTotal" resultType="int">
@@ -63,12 +63,14 @@
 		insert into t_module
 		(
 			`project_id`, 
-			`name`
+			`name`,
+			`code`
 		)
 		values
 		(
 			#{projectId}, 
-			#{name}
+			#{name},
+			#{code}
 		)
 	</insert>
 	 
@@ -77,6 +79,7 @@
 		<set>
 			<if test="projectId != null">`project_id` = #{projectId}, </if>
 			<if test="name != null">`name` = #{name}</if>
+			<if test="code != null">`code` = #{code}</if>
 		</set>
 		where id = #{id}
 	</update>
