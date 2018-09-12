@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @date ${datetime}
  */
 public class ${className}Result implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)
