@@ -20,6 +20,11 @@ public class ModuleEntity implements Serializable {
 	private String name;
 
 	/**
+	 * 名称
+	 */
+	private String code;
+
+	/**
 	 * 设置：主键ID
 	 */
 	public void setId(Integer id) {
@@ -54,5 +59,13 @@ public class ModuleEntity implements Serializable {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

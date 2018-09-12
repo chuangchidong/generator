@@ -18,8 +18,6 @@ import com.generator.utils.Query;
 import com.generator.utils.R;
 
 
-
-
 /**
  * 模块信息
  * 
