@@ -1,4 +1,6 @@
-package${package}.${moduleName}.form;
+package ${package}.${moduleName}.form;
+
+import java.io.Serializable;
 
 /**
  * ${comments}
@@ -8,6 +10,7 @@ package${package}.${moduleName}.form;
  * @date ${datetime}
  */
 public class ${className}Form implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)

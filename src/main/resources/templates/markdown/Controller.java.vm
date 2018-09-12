@@ -1,0 +1,29 @@
+package ${package}.${moduleName}.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+import ${package}.${moduleName}.form.*;
+import ${package}.${moduleName}.result.*;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+@RestController
+public class ${className}Controller {
+
+#foreach ($api in $apiList)
+    /**
+     * $api.methodDesc
+     */
+    @RequestMapping(method = RequestMethod.${api.methodType}, path ="${api.url}")
+    public ${api.methodUpperCase}Result ${api.methodName}(${api.requestAnnotation} ${api.methodUpperCase}Form form) {
+
+        return new ${api.methodUpperCase}Result();
+    }
+#end
+
+}
