@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "${tableName}")
 public class ${className} implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	
 #foreach ($column in $columns)

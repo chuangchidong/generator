@@ -4,7 +4,14 @@ server:
         max-threads: 10
         min-spare-threads: 10
     port: 8081
+management:
+  port: 54001
+  security:
+    enabled: false
 
+#  health:
+#    mail:
+#      enabled: false
 # mysql
 spring:
     datasource:
@@ -22,4 +29,7 @@ spring:
 # Mybatis配置
 mybatis:
     mapperLocations: classpath:mapper/**/*.xml
+    configuration:
+      map-underscore-to-camel-case: true
+
 

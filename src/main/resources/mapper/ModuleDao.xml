@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.generator.dao.ModuleDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.generator.entity.ModuleEntity" id="moduleMap">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.generator.entity.ModuleEntity">
+		select * from t_module where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.generator.entity.ModuleEntity">
+		select * from t_module WHERE 1=1
+
+		<if test="projectIdList != null ">
+			AND project_id IN
+			<foreach item="id" collection="projectIdList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="project_id != null ">
+			AND project_id = #{project_id}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryListByApiIds" resultType="com.generator.entity.ModuleEntity" parameterType="java.util.List">
+		SELECT m.* FROM t_module m,t_api a WHERE m.id=a.module_id
+		AND m.id IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		GROUP BY m.id
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_module
+		<if test="projectIdList != null ">
+			WHERE project_id IN
+			<foreach item="id" collection="projectIdList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.generator.entity.ModuleEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_module
+		(
+			`project_id`, 
+			`name`,
+			`code`
+		)
+		values
+		(
+			#{projectId}, 
+			#{name},
+			#{code}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.generator.entity.ModuleEntity">
+		update t_module 
+		<set>
+			<if test="projectId != null">`project_id` = #{projectId}, </if>
+			<if test="name != null">`name` = #{name}</if>
+			<if test="code != null">`code` = #{code}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_module where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_module where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

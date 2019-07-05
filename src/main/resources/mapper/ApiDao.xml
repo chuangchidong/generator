@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.generator.dao.ApiDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.generator.entity.ApiEntity" id="apiMap">
+        <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
+        <result property="method" column="method"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.generator.entity.ApiEntity">
+		select * from t_api where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.generator.entity.ApiEntity">
+		select * from t_api WHERE 1=1
+		<if test="moduleIdList != null ">
+			AND module_id IN
+			<foreach item="id" collection="moduleIdList" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="project_id != null ">
+			AND project_id = #{project_id}
+		</if>
+		<if test="module_id != null ">
+			AND module_id = #{module_id}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id ASC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_api 
+	</select>
+	 
+	<insert id="save" parameterType="com.generator.entity.ApiEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_api
+		(
+			`project_id`, 
+			`module_id`, 
+			`name`, 
+			`url`, 
+			`method`
+		)
+		values
+		(
+			#{projectId}, 
+			#{moduleId}, 
+			#{name}, 
+			#{url}, 
+			#{method}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.generator.entity.ApiEntity">
+		update t_api 
+		<set>
+			<if test="projectId != null">`project_id` = #{projectId}, </if>
+			<if test="moduleId != null">`module_id` = #{moduleId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="method != null">`method` = #{method}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_api where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_api where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

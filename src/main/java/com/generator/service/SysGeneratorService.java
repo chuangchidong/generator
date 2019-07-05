@@ -1,14 +1,17 @@
 package com.generator.service;
 
-import com.generator.dao.SysGeneratorDao;
+import com.generator.dao.*;
+import com.generator.entity.ApiEntity;
+import com.generator.entity.ModuleEntity;
+import com.generator.entity.RequestEntity;
+import com.generator.entity.ResponseEntity;
 import com.generator.utils.GenUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -22,6 +25,16 @@ import java.util.zip.ZipOutputStream;
 public class SysGeneratorService {
 	@Autowired
 	private SysGeneratorDao sysGeneratorDao;
+
+	@Autowired
+	private ApiDao apiDao;
+	@Autowired
+	private RequestDao requestDao;
+	@Autowired
+	private ResponseDao responseDao;
+	@Autowired
+	private ModuleDao moduleDao;
+
 
 	public List<Map<String, Object>> queryList(Map<String, Object> map) {
 		return sysGeneratorDao.queryList(map);
@@ -54,4 +67,33 @@ public class SysGeneratorService {
 		IOUtils.closeQuietly(zip);
 		return outputStream.toByteArray();
 	}
+
+	public byte[] apiGeneratorCode(List<Integer> apiIds) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ZipOutputStream zip = new ZipOutputStream(outputStream);
+		List<ApiEntity> apiList = new ArrayList<>();
+		List<ModuleEntity> moduleList = moduleDao.queryListByApiIds(apiIds);
+		for (Integer apiId : apiIds) {
+
+			ApiEntity apiEntity = apiDao.queryObject(apiId);
+
+			Map<String, Object> param = new HashMap<>(1 << 4);
+			param.put("api_id",apiId);
+
+			List<RequestEntity> requestList = requestDao.queryList(param);
+			apiEntity.setRequestList(requestList);
+
+			List<ResponseEntity> responseList = responseDao.queryList(param);
+			apiEntity.setResponseList(responseList);
+			apiEntity.setResponseJson(GenUtils.responseJson(responseList));
+			apiList.add(apiEntity);
+		}
+		GenUtils.generatorDoc("测试文档", moduleList, apiList, zip);
+		IOUtils.closeQuietly(zip);
+		return outputStream.toByteArray();
+	}
+
+
+
+
 }

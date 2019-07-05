@@ -81,3 +81,14 @@ function getSelectedRows() {
     
     return grid.getGridParam("selarrrow");
 }
+
+function calSaveRow(jqGrid,rowId) {
+	$.ajaxSetup({
+		contentType: "application/x-www-form-urlencoded"
+	});
+	jqGrid.saveRow(rowId);
+
+	$.ajaxSetup({
+		contentType: "application/json",
+	});
+}
