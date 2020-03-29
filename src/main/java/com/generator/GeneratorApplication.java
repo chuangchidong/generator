@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author zhangzhidong
  */
 @SpringBootApplication
-@EnableAutoConfiguration
 @MapperScan("com.generator.dao")
 public class GeneratorApplication {
 
